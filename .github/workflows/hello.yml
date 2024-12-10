@@ -1,9 +1,0 @@
-name: Hello, World! #name：ワークフローの名前
-on: push #on: push：リポジトリへのpushイベント時にこのワークフローが実行されるように定義
-
-jobs: #jobs：ワークフロー内で実行されるジョブの定義
-  build: #build：ジョブのID。jobsのキーとしてユニークであれば任意の文字列でOK
-    name: Greeting #name：ジョブ名
-    runs-on: ubuntu-latest #runs-on：ジョブが実行される仮想環境を指定
-    steps: #steps：ジョブ内で実行される処理を定義
-      - run: echo "Hello, World!"
