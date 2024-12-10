@@ -7,13 +7,13 @@ jobs: #jobs：<必須>ジョブの定義の開始を示す。
     runs-on: ubuntu-latest #runs-on：<必須>ジョブが実行されるマシンを定義。
     steps: #steps：<必須>ジョブが実行するステップの定義。
       - name: Checkout #name：ステップの名前を定義。ブラウザ上で表示され、省略した時はステップで実行するコマンドが表示される。
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2 #uses：アクションの実行を定義。@以降のバージョン指定は必須。
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3
-        with:
+        with: #with：アクションのパラメータを定義。
           node-version: 16.x
       - name: Install dependencies
-        run: npm ci
+        run: npm ci #run：コマンドラインの実行を定義。
       - name: Test
         run: npm test
   lint:
