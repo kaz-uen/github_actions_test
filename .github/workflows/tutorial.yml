@@ -15,6 +15,6 @@ jobs:
 
   echo_goodbye:
     runs-on: ubuntu-latest
-      steps:
+    steps:
         - name: "別れの挨拶"
           run: echo "Good Bye!"
