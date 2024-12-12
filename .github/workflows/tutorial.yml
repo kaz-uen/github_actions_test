@@ -12,3 +12,9 @@ jobs:
         run: echo "My Name is Taro!!"
       - name: "趣味"
         run: echo "I love programming!!"
+
+  echo_goodbye:
+    runs-on: ubuntu-latest
+      steps:
+        - name: "別れの挨拶"
+          run: echo "Good Bye!"
