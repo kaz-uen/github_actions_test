@@ -1,9 +1,9 @@
 name: GitHub Actions Demo
 
-on: push
+on: [push]
 
 jobs:
-  hello:
+  echo_hello:
     runs-on: ubuntu-latest
     steps:
       - name: "挨拶"
@@ -12,3 +12,9 @@ jobs:
         run: echo "My Name is Taro!!"
       - name: "趣味"
         run: echo "I love programming!!"
+
+  good_bye:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "別れの挨拶"
+        run: echo "Good Bye!!"
