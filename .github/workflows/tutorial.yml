@@ -1,32 +1,31 @@
 name: GitHub Actions Demo
 
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
-  lint:
-    name: Lint
+  check:
+    name: Checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
       - name: Install dependencies
         run: npm ci
-      - name: Lint
+      - name: Run eslint
         run: npm run lint
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Danger
-        uses: danger/danger-js@11.0.2
+      - name: Build project
+        run: npm run build
+      - name: Run Danger.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DANGER_DISABLE_TRANSPILATION: true
+        run: npx danger ci
