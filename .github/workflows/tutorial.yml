@@ -1,20 +1,32 @@
 name: GitHub Actions Demo
 
-on: [push]
+on: pull_request
 
 jobs:
-  echo_hello:
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: "挨拶"
-        run: echo "Nice to meet you!!"
-      - name: "自己紹介"
-        run: echo "My Name is Taro!!"
-      - name: "趣味"
-        run: echo "I love programming!!"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
 
-  good_bye:
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
-      - name: "別れの挨拶"
-        run: echo "Good Bye!!"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Danger
+        uses: danger/danger-js@11.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DANGER_DISABLE_TRANSPILATION: true
