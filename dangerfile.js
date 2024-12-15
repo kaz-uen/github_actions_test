@@ -7,7 +7,7 @@ let isAllCheckPassed = true;
 // 500行以上の追加・削除の変更があったかどうか
 const diffSize = Math.max(
   danger.github.pr.additions,
-  danger.github.pr.deletions
+  danger.github.pr.deletions,
 );
 
 if (diffSize > 200) {
