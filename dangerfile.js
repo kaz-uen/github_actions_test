@@ -1,10 +1,14 @@
+// eslint-disable-next-line node/no-missing-require
 const { danger, warn, markdown } = require("danger");
 
 // isAllCheckPassedの初期化
 let isAllCheckPassed = true;
 
 // 500行以上の追加・削除の変更があったかどうか
-const diffSize = Math.max(danger.github.pr.additions, danger.github.pr.deletions);
+const diffSize = Math.max(
+  danger.github.pr.additions,
+  danger.github.pr.deletions
+);
 
 if (diffSize > 200) {
   warn("Should reduce diffs less than 500");
@@ -18,5 +22,5 @@ if (danger.github.pr.changed_files > 1) {
 }
 
 if (isAllCheckPassed) {
-  markdown('## All checkes have passed');
+  markdown("## All checks have passed");
 }
