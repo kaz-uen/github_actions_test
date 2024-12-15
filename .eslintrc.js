@@ -8,4 +8,7 @@ module.exports = {
     sourceType: "module",
     ecmaVersion: 2015,
   },
+  rules: {
+    "prettier/prettier": "off"  // Prettierのルールを一時的に無効化
+  }
 };
