@@ -1,4 +1,4 @@
-const { danger, warn } = require("danger");
+const { danger, warn, markdown } = require("danger");
 
 // isAllCheckPassedの初期化
 let isAllCheckPassed = true;
