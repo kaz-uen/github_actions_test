@@ -5,7 +5,7 @@
     "scripts": {
         "lint": "eslint .",
         "build": "build",
-        "dange": "danger ci",
+        "danger": "danger ci",
         "test": "mocha"
     },
     "license": "MIT",
