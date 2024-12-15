@@ -1,3 +1,4 @@
+/* eslint-disable node/no-unpublished-require */
 const { danger, warn } = require("danger");
 
 const totalLinesChanged = danger.git.linesAdded + danger.git.linesDeleted;
