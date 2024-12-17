@@ -27,6 +27,18 @@ module.exports = {
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
-    'node/no-unpublished-require': 'off'
-  }
+    'node/no-unpublished-require': 'off',
+    'node/no-unsupported-features/es-syntax': ['error', {
+      version: '>=14.0.0',
+      ignores: ['modules']
+    }]
+  },
+  overrides: [
+    {
+      files: ['src/**/*.js', 'src/**/*.jsx'],
+      rules: {
+        'node/no-unsupported-features/es-syntax': 'off'
+      }
+    }
+  ]
 };
