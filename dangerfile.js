@@ -1,7 +1,8 @@
 /* eslint-disable node/no-unpublished-require */
 const { danger, warn } = require("danger");
 
-const totalLinesChanged = danger.git.linesAdded + danger.git.linesDeleted;
+// const totalLinesChanged = danger.git.linesAdded + danger.git.linesDeleted;
+const totalLinesChanged = danger.github.pr.additions + danger.github.pr.deletions;
 const filesChanged = danger.git.modified_files.length + danger.git.created_files.length + danger.git.deleted_files.length;
 
 // 200行以上の追加・削除の変更があったかどうか
