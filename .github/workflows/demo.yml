@@ -1,26 +1,41 @@
+# ワークフローの名前を定義
 name: GitHub Actions Demo
 
+# ワークフローのトリガーとなるイベントを定義
 on:
   pull_request:
+    # PRの作成、更新、クローズ（マージ）時にトリガー
     types: [opened, synchronize, closed]
+    # mainブランチへのPRの場合のみ実行
     branches:
       - main
 
 jobs:
+  # Lintチェックを行うジョブ
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    # 更新が発生しなかった場合に動作を打ち切る時間上限を各ジョブに設定
+    timeout-minutes: 10
+    runs-on: ubuntu-latest # Ubuntu最新版で実行
     steps:
+      # リポジトリのコードをチェックアウト
       - uses: actions/checkout@v4
+      # Node.jsの環境をセットアップ
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: 'npm'
+          node-version: 22  # Node.jsのバージョンを指定
+          cache: 'npm'  # npm依存関係をキャッシュ
+      # 依存関係をインストール
       - run: npm ci
+      # Lintチェックを実行
       - run: npm run lint
 
+  # ビルドを行うジョブ
   build:
+    # lintが成功した後にビルドを実行
+    needs: [lint]
     name: Build
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,13 +44,16 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
+      # プロジェクトのビルドを実行
       - run: npm run build
 
+  # Danger.jsによるコードレビューを行うジョブ
   danger:
     name: Danger
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      pull-requests: write  # PRへのコメント権限を付与
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,8 +61,10 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
+      # Danger.jsを実行
       - run: npx danger ci
         env:
+          # GitHub APIトークンを環境変数として設定
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
