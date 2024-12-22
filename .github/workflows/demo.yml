@@ -15,20 +15,38 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest # Ubuntu最新版で実行
-    # 更新が発生しなかった場合に動作を打ち切る時間上限を各ジョブに設定
-    timeout-minutes: 10
     steps:
       # リポジトリのコードをチェックアウト
       - uses: actions/checkout@v4
+
       # Node.jsの環境をセットアップ
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        id: setup
+        uses: actions/setup-node@v4
         with:
           node-version: 22  # Node.jsのバージョンを指定
           cache: 'npm'  # npm依存関係をキャッシュ
+
+      - name: Install dependencies
+        id: install
+        if: success() && steps.install.outcome == 'success'
       # 依存関係をインストール
-      - run: npm ci
+        run: npm ci
+        # 更新が発生しなかった場合に動作を打ち切る時間上限を各ジョブに設定
+        timeout-minutes: 5
+        continue-on-error: false
+
       # Lintチェックを実行
-      - run: npm run lint
+      - name: Run lint
+        if: success() && steps.install.outcome == 'success'
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Report lint failure
+        if: failure()
+        run: |
+          echo "::error::Lint check failed"
+          exit 1
 
   # ビルドを行うジョブ
   build:
@@ -36,34 +54,70 @@ jobs:
     needs: [lint]
     name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node.js
+        id: setup
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+
+      - name: Install dependencies
+        id: install
+        if: success() && steps.setup.outcome == 'success'
+        run: npm ci
+        timeout-minutes: 5
+        continue-on-error: false
+
+      - name: Build project
+        if: success() && steps.install.outcome == 'success'
       # プロジェクトのビルドを実行
-      - run: npm run build
+        run: npm run build
+        continue-on-error: false
+
+      - name: Report build failure
+        if: failure()
+        run: |
+          echo "::error::Build failed"
+          exit 1
 
   # Danger.jsによるコードレビューを行うジョブ
   danger:
     name: Danger
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     permissions:
       pull-requests: write  # PRへのコメント権限を付与
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node.js
+        id: setup
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+
+      - name: Install dependencies
+        id: install
+        if: success() && steps.setup.outcome == 'success'
+        run: npm ci
+        timeout-minutes: 5
+        continue-on-error: false
+
+      - name: Run Danger
+        if: success() && steps.setup.outcome == 'success'
       # Danger.jsを実行
-      - run: npx danger ci
+        run: npx danger ci
+        continue-on-error: false
         env:
           # GitHub APIトークンを環境変数として設定
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report Danger failure
+        if: failure()
+        run: |
+          echo "::error::Danger check failed"
+          exit 1
