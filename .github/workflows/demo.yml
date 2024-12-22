@@ -14,9 +14,9 @@ jobs:
   # Lintチェックを行うジョブ
   lint:
     name: Lint
+    runs-on: ubuntu-latest # Ubuntu最新版で実行
     # 更新が発生しなかった場合に動作を打ち切る時間上限を各ジョブに設定
     timeout-minutes: 10
-    runs-on: ubuntu-latest # Ubuntu最新版で実行
     steps:
       # リポジトリのコードをチェックアウト
       - uses: actions/checkout@v4
@@ -35,8 +35,8 @@ jobs:
     # lintが成功した後にビルドを実行
     needs: [lint]
     name: Build
-    timeout-minutes: 10
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -50,8 +50,8 @@ jobs:
   # Danger.jsによるコードレビューを行うジョブ
   danger:
     name: Danger
-    timeout-minutes: 10
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pull-requests: write  # PRへのコメント権限を付与
     steps:
