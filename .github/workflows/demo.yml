@@ -123,6 +123,7 @@ jobs:
       # Dangerエラー時のレポート出力
       - name: Report Danger failure
         if: failure()
+        # 「exit 1」でプロセスを異常終了
         run: |
           echo "::error::Danger check failed"
           exit 1
