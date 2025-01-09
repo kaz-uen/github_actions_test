@@ -30,14 +30,14 @@ jobs:
       # 依存パッケージのインストール
       - name: Install dependencies
         id: install
-        if: success() && steps.setup.outcome == 'success' # セットアップが成功した場合のみ実行
+        if: success() # セットアップが成功した場合のみ実行
         run: npm ci # package-lock.jsonを厳密に参照してインストール
         timeout-minutes: 5 # 更新が発生しなかった場合に5分で動作を打ち切る
         continue-on-error: false # エラー時は即座に停止
 
       # Lintチェックを実行
       - name: Run lint
-        if: success() && steps.install.outcome == 'success'  # インストールが成功した場合のみ実行
+        if: success()  # インストールが成功した場合のみ実行
         run: npm run lint # package.jsonのscripts.lintのコマンドを実行
         continue-on-error: false # エラー時は即座に停止
 
@@ -67,14 +67,14 @@ jobs:
       # 依存パッケージのインストール
       - name: Install dependencies
         id: install
-        if: success() && steps.setup.outcome == 'success'
+        if: success()
         run: npm ci
         timeout-minutes: 5
         continue-on-error: false
 
       # プロジェクトのビルド実行
       - name: Build project
-        if: success() && steps.install.outcome == 'success'
+        if: success()
         run: npm run build
         continue-on-error: false
 
@@ -105,14 +105,14 @@ jobs:
       # 依存パッケージのインストール
       - name: Install dependencies
         id: install
-        if: success() && steps.setup.outcome == 'success'
+        if: success()
         run: npm ci
         timeout-minutes: 5
         continue-on-error: false
 
       # Danger.jsを実行
       - name: Run Danger
-        if: success() && steps.setup.outcome == 'success'
+        if: success()
         run: npx danger ci
         continue-on-error: false
         env:
