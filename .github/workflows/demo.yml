@@ -30,7 +30,7 @@ jobs:
       # 依存パッケージのインストール
       - name: Install dependencies
         id: install
-        if: success() && steps.install.outcome == 'success' # セットアップが成功した場合のみ実行
+        if: success() && steps.setup.outcome == 'success' # セットアップが成功した場合のみ実行
         run: npm ci # package-lock.jsonを厳密に参照してインストール
         timeout-minutes: 5 # 更新が発生しなかった場合に5分で動作を打ち切る
         continue-on-error: false # エラー時は即座に停止
@@ -38,13 +38,13 @@ jobs:
       # Lintチェックを実行
       - name: Run lint
         if: success() && steps.install.outcome == 'success'  # インストールが成功した場合のみ実行
-        run: npm run lint
+        run: npm run lint # package.jsonのscripts.lintのコマンドを実行
         continue-on-error: false # エラー時は即座に停止
 
       # Lintエラー時のレポート出力
       - name: Report lint failure
         if: failure() # 前のステップが失敗した場合に実行
-        run: |
+        run: | # 「exit 1」でプロセスを異常終了させる
           echo "::error::Lint check failed"
           exit 1
 
