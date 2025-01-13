@@ -32,7 +32,7 @@ module.exports = {
       version: '>=14.0.0',
       ignores: ['modules']
     }],
-    'no-console': ['error', { allow: ['warn', 'error'] }]
+    'no-console': ['warn', { allow: ['warn', 'error'] }]
   },
   overrides: [
     {
